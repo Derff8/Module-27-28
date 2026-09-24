@@ -1,7 +1,4 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 
 public class Currency
 {
@@ -19,6 +16,16 @@ public class Currency
     public void AddValue()
     {
         Value++;
+
+        OnValueChanged?.Invoke(Value);
+    }
+
+    public void SubtractValue()
+    {
+        Value--;
+
+        if (Value < 0)
+            Value = 0;
 
         OnValueChanged?.Invoke(Value);
     }

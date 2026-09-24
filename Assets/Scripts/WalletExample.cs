@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -18,5 +17,12 @@ public class WalletExample : MonoBehaviour
         foreach (Currency currency in Currency)
             if (currency.Tipe == type)
                 currency.AddValue();
+    }
+
+    public void SubtractCurrency(CurrencyType type)
+    {
+        foreach (Currency currency in Currency)
+            if (currency.Tipe == type)
+                currency.SubtractValue();
     }
 }

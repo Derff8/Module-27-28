@@ -1,8 +1,6 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
 [Serializable]
 public struct CurrencyIconData
@@ -20,6 +18,8 @@ public class CurrencyUI : MonoBehaviour
 
     private List<Currency> _currencies;
 
+    private List<CurrencyView> _spawnedViews = new List<CurrencyView>();
+
     private void Start()
     {
         _currencies = _wallet.Currency;
@@ -31,12 +31,29 @@ public class CurrencyUI : MonoBehaviour
             newCurrencyItem.Initalize(icon, currency);
 
             newCurrencyItem.OnAddClicked += RequestAddCurrency;
+            newCurrencyItem.OnSubtractClicked += RequestSubtractCurrency;
+
+            _spawnedViews.Add(newCurrencyItem);
         }            
+    }
+
+    private void OnDestroy()
+    {
+        foreach (CurrencyView view in _spawnedViews)
+        {
+            view.OnAddClicked -= RequestAddCurrency;
+            view.OnSubtractClicked -= RequestSubtractCurrency;
+        }
     }
 
     private void RequestAddCurrency(CurrencyType type)
     {
         _wallet.AddCurrency(type);
+    }
+
+    private void RequestSubtractCurrency(CurrencyType type)
+    {
+        _wallet.SubtractCurrency(type);
     }
 
     private Sprite GetIconForCurrency(CurrencyType tipe)

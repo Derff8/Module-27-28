@@ -1,6 +1,4 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -8,9 +6,11 @@ using UnityEngine.UI;
 public class CurrencyView : MonoBehaviour
 {
     public event Action<CurrencyType> OnAddClicked;
+    public event Action<CurrencyType> OnSubtractClicked;
     [SerializeField] private Image _imageCurrency;
     [SerializeField] private TMP_Text _countCurrency;
     [SerializeField] private Button _addButton;
+    [SerializeField] private Button _subtractButton;
 
     private Currency _myCurrency;
 
@@ -40,16 +40,23 @@ public class CurrencyView : MonoBehaviour
 
     private void OnEnable()
     {
-        _addButton.onClick.AddListener(ButtonClick);
+        _addButton.onClick.AddListener(AddButtonClick);
+        _subtractButton.onClick.AddListener(SubtractButtonClick);
     }
 
     private void OnDisable()
     {
-        _addButton.onClick.RemoveListener(ButtonClick);
+        _addButton.onClick.RemoveListener(AddButtonClick);
+        _subtractButton.onClick.RemoveListener(SubtractButtonClick);
     }
 
-    private void ButtonClick()
+    private void AddButtonClick()
     {
         OnAddClicked?.Invoke(_myCurrency.Tipe);
+    }
+
+    private void SubtractButtonClick()
+    {
+        OnSubtractClicked?.Invoke(_myCurrency.Tipe);
     }
 }
