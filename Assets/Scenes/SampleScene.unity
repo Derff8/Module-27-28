@@ -365,6 +365,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 264deb3244189b14b8d5deb3c2c45ef7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _walletView: {fileID: 395782369}
 --- !u!1 &395782367
 GameObject:
   m_ObjectHideFlags: 0
@@ -376,7 +377,7 @@ GameObject:
   - component: {fileID: 395782368}
   - component: {fileID: 395782369}
   m_Layer: 0
-  m_Name: CurrencyUI
+  m_Name: WalletViw
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -416,7 +417,6 @@ MonoBehaviour:
     Icon: {fileID: 21300000, guid: 5659772c7d15ffb4c89b779d8933fc26, type: 3}
   - Type: 2
     Icon: {fileID: 21300000, guid: 480130d8ed5867842afd2c42a7850cd9, type: 3}
-  _wallet: {fileID: 340562407}
   _walletContainer: {fileID: 88895502}
   _currencyPrefab: {fileID: 2051215774782711882, guid: ab087e1185e0c66439d388f53d631191,
     type: 3}
