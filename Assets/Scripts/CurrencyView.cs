@@ -5,37 +5,27 @@ using UnityEngine.UI;
 
 public class CurrencyView : MonoBehaviour
 {
-    public event Action<CurrencyType> OnAddClicked;
-    public event Action<CurrencyType> OnSubtractClicked;
+    public event Action<CurrencyType, int> OnAddClicked;
+    public event Action<CurrencyType, int> OnSubtractClicked;
+
     [SerializeField] private Image _imageCurrency;
     [SerializeField] private TMP_Text _countCurrency;
     [SerializeField] private Button _addButton;
     [SerializeField] private Button _subtractButton;
+    [SerializeField] private TMP_InputField _inputField;
 
-    private Currency _myCurrency;
+    public CurrencyType Type { get; private set; }
 
-    public void Initalize(Sprite image, Currency currency)
+    public void Initalize(CurrencyType type ,Sprite image, int startValue)
     {
+        Type = type;
         _imageCurrency.sprite = image;
-        _myCurrency = currency;
-
-        UpdateText(_myCurrency.Value);
-
-        _myCurrency.OnValueChanged += UpdateText;
+        UpdateText(startValue);
     }
 
-
-    private void UpdateText(int newValue)
+    public void UpdateText(int newValue)
     {
         _countCurrency.text = newValue.ToString();
-    }
-
-    private void OnDestroy()
-    {
-        if (_myCurrency != null)
-        {
-            _myCurrency.OnValueChanged -= UpdateText;
-        }
     }
 
     private void OnEnable()
@@ -52,11 +42,21 @@ public class CurrencyView : MonoBehaviour
 
     private void AddButtonClick()
     {
-        OnAddClicked?.Invoke(_myCurrency.Tipe);
+        if (int.TryParse(_inputField.text, out int amount))
+        {
+            OnAddClicked?.Invoke(Type, amount);
+        }
+
+        _inputField.text = "";
     }
 
     private void SubtractButtonClick()
     {
-        OnSubtractClicked?.Invoke(_myCurrency.Tipe);
+        if (int.TryParse(_inputField.text, out int amount))
+        {
+            OnSubtractClicked?.Invoke(Type, amount);
+        }
+
+        _inputField.text = "";
     }
 }

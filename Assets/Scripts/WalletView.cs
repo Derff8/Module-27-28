@@ -8,37 +8,53 @@ public struct CurrencyIconData
     public CurrencyType Type;
     public Sprite Icon;
 }
-public class CurrencyUI : MonoBehaviour
+public class WalletView : MonoBehaviour
 {
     [SerializeField] private List<CurrencyIconData> _currencyIcons;
-
-    [SerializeField] private WalletExample _wallet;
     [SerializeField] private Transform _walletContainer;
     [SerializeField] private CurrencyView _currencyPrefab;
 
-    private List<Currency> _currencies;
+    private Wallet _wallet;
 
     private List<CurrencyView> _spawnedViews = new List<CurrencyView>();
 
-    private void Start()
+    public void Initialize(Wallet wallet)
     {
-        _currencies = _wallet.Currency;
+        _wallet = wallet;
 
-        foreach (Currency currency in _currencies)
+        foreach (CurrencyType type in Enum.GetValues(typeof(CurrencyType)))
         {
             CurrencyView newCurrencyItem = Instantiate(_currencyPrefab, _walletContainer);
-            Sprite icon = GetIconForCurrency(currency.Tipe);
-            newCurrencyItem.Initalize(icon, currency);
+            Sprite icon = GetIconForCurrency(type);
+            newCurrencyItem.Initalize(type, icon, _wallet.Get(type));
 
             newCurrencyItem.OnAddClicked += RequestAddCurrency;
             newCurrencyItem.OnSubtractClicked += RequestSubtractCurrency;
 
             _spawnedViews.Add(newCurrencyItem);
-        }            
+        }
+        _wallet.OnCurencyChanged += UpdateCurrenyUI;
+    }
+
+    private void UpdateCurrenyUI(CurrencyType type, int newValue)
+    {
+        foreach (CurrencyView view in _spawnedViews)
+        {
+            if (view.Type == type)
+            {
+                view.UpdateText(newValue);
+                break;
+            }
+        }
     }
 
     private void OnDestroy()
     {
+        if (_wallet != null)
+        {
+            _wallet.OnCurencyChanged -= UpdateCurrenyUI;
+        }
+
         foreach (CurrencyView view in _spawnedViews)
         {
             view.OnAddClicked -= RequestAddCurrency;
@@ -46,14 +62,14 @@ public class CurrencyUI : MonoBehaviour
         }
     }
 
-    private void RequestAddCurrency(CurrencyType type)
+    private void RequestAddCurrency(CurrencyType type, int amount)
     {
-        _wallet.AddCurrency(type);
+        _wallet.Add(type, amount);
     }
 
-    private void RequestSubtractCurrency(CurrencyType type)
+    private void RequestSubtractCurrency(CurrencyType type, int amount)
     {
-        _wallet.SubtractCurrency(type);
+        _wallet.TrySubtract(type, amount);
     }
 
     private Sprite GetIconForCurrency(CurrencyType tipe)
